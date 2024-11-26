@@ -1328,7 +1328,7 @@ GameObject:
   - component: {fileID: 6279823610682781954}
   - component: {fileID: 127867265787259768}
   m_Layer: 0
-  m_Name: (P) Characters_Zombie_SuitMan_1
+  m_Name: Zombie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
