@@ -93,14 +93,39 @@ public class ZombieSpawner : MonoBehaviour
         {
             if (!zombie.activeInHierarchy)
             {
-                Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
-                zombie.transform.position = spawnPoint.position;
-                zombie.transform.rotation = spawnPoint.rotation;
-                zombie.SetActive(true);
-                zombiesAlive++;
+                Transform spawnPoint = GetActiveSpawnPoint();
+                if (spawnPoint != null)
+                {
+                    zombie.transform.position = spawnPoint.position;
+                    zombie.transform.rotation = spawnPoint.rotation;
+                    zombie.SetActive(true);
+                    zombiesAlive++;
+                }
                 break;
             }
         }
+    }
+
+    // Get a random active spawn point
+    private Transform GetActiveSpawnPoint()
+    {
+        // Filter the spawn points to include only active ones
+        List<Transform> activeSpawnPoints = new List<Transform>();
+        foreach (var spawnPoint in spawnPoints)
+        {
+            if (spawnPoint.gameObject.activeInHierarchy)
+            {
+                activeSpawnPoints.Add(spawnPoint);
+            }
+        }
+
+        // Return a random active spawn point, or null if none are active
+        if (activeSpawnPoints.Count > 0)
+        {
+            return activeSpawnPoints[Random.Range(0, activeSpawnPoints.Count)];
+        }
+
+        return null;
     }
 
     // Call this function when a zombie is killed

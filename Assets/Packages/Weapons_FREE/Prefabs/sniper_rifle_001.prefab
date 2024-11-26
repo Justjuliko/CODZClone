@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
@@ -52,7 +53,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 732953fa90bf56942a84625b42cdbf1d, type: 2}
     - target: {fileID: 919132149155446097, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
@@ -60,26 +61,13 @@ PrefabInstance:
       value: sniper_rifle_001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 553663184000285511}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
---- !u!1 &2352997721424495953 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
-  m_PrefabInstance: {fileID: 3199507523640145920}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &5035524270437951662
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2352997721424495953}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6699955837847312083, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
 --- !u!4 &3164999580072796139 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 013b981c31950dc4f91aa5e7ae620bf4, type: 3}
@@ -90,6 +78,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3164999580072796139}
     m_Modifications:
     - target: {fileID: 4845280019125430733, guid: 6b5140e90cca96b4ca7b0dae45e58fef, type: 3}
@@ -141,4 +130,12 @@ PrefabInstance:
       value: sight_001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b5140e90cca96b4ca7b0dae45e58fef, type: 3}
+--- !u!4 &553663184000285511 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4845280019125430733, guid: 6b5140e90cca96b4ca7b0dae45e58fef, type: 3}
+  m_PrefabInstance: {fileID: 4941263782590059146}
+  m_PrefabAsset: {fileID: 0}
