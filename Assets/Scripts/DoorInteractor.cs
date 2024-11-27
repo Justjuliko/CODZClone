@@ -18,6 +18,13 @@ public class DoorInteractor : MonoBehaviour
     // Referencia al InputAction del sistema de entrada
     private InputAction interactAction;
 
+    Player player;
+
+    private void Start()
+    {
+        player = GameObject.Find("FirstPersonController").GetComponent<Player>();
+    }
+
     private void OnEnable()
     {
         // Obtener el action map Player desde el Input System y asignar la acción Interact
@@ -71,7 +78,6 @@ public class DoorInteractor : MonoBehaviour
         if (isPlayerInRange)
         {
             // Obtener el script "Player" para verificar los puntos
-            Player player = GameObject.Find("FirstPersonController").GetComponent<Player>();
             if (player == null)
             {
                 Debug.LogError("No se encontró el script Player.");

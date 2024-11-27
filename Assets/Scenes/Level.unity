@@ -1351,7 +1351,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &487811543
 Transform:
   m_ObjectHideFlags: 0
@@ -2306,8 +2306,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slot1: 1
-  primaryWeaponID: -1
-  secondaryWeaponID: -1
+  primaryWeaponID: 1
+  secondaryWeaponID: 2
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &891391698
 MonoBehaviour:
@@ -2999,6 +2999,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2082731457}
     m_Modifications:
+    - target: {fileID: 2226802199106993025, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3266332841442097812, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
       propertyPath: m_Name
       value: SpawnPoint (2)
@@ -3865,6 +3869,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2082731457}
     m_Modifications:
+    - target: {fileID: 2226802199106993025, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3266332841442097812, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
       propertyPath: m_Name
       value: SpawnPoint (4)
@@ -3941,6 +3949,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2082731457}
     m_Modifications:
+    - target: {fileID: 2226802199106993025, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3266332841442097812, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
       propertyPath: m_Name
       value: SpawnPoint (1)
@@ -4456,6 +4468,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2082731457}
     m_Modifications:
+    - target: {fileID: 2226802199106993025, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3266332841442097812, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
       propertyPath: m_Name
       value: SpawnPoint (3)
@@ -5090,6 +5106,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2082731457}
     m_Modifications:
+    - target: {fileID: 2226802199106993025, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3266332841442097812, guid: 224d4b7d38f893440aa9947f849d235f, type: 3}
       propertyPath: m_Name
       value: SpawnPoint

@@ -80,7 +80,7 @@ public class PlayerShooting : MonoBehaviour
         UpdateAmmoUI();
         warningText.gameObject.SetActive(false);
 
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        playerScript = GameObject.Find("FirstPersonController").GetComponent<Player>();
 
         // Asegurar que la retícula está encendida al inicio
         if (aimReticle != null)

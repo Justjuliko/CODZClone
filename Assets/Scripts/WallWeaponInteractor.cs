@@ -20,6 +20,14 @@ public class WallWeaponInteractor : MonoBehaviour
     // Referencia al InputAction del sistema de entrada
     private InputAction interactAction;
 
+    Player player;
+    WeaponInventory weaponInventory;
+
+    private void Start()
+    {
+        player = GameObject.Find("FirstPersonController").GetComponent<Player>();
+        weaponInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponInventory>();
+    }
     private void OnEnable()
     {
         // Obtener el action map Player desde el Input System y asignar la acción Interact
@@ -48,9 +56,6 @@ public class WallWeaponInteractor : MonoBehaviour
             // Actualizar el mensaje de interacción dependiendo de la situación
             if (interactionText != null)
             {
-                Player player = GameObject.Find("FirstPersonController").GetComponent<Player>();
-                WeaponInventory weaponInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponInventory>();
-
                 if (weaponInventory != null && player != null)
                 {
                     // Obtener el ID del arma equipada
@@ -109,7 +114,6 @@ public class WallWeaponInteractor : MonoBehaviour
         if (isPlayerInRange)
         {
             // Obtener el script "Player" para verificar los puntos
-            Player player = GameObject.Find("FirstPersonController").GetComponent<Player>();
             if (player == null)
             {
                 Debug.LogError("No se encontró el script Player.");
@@ -117,7 +121,6 @@ public class WallWeaponInteractor : MonoBehaviour
             }
 
             // Obtener el script "WeaponInventory" del objeto con tag "Player"
-            WeaponInventory weaponInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponInventory>();
             if (weaponInventory == null)
             {
                 Debug.Log("No se encontró el inventory");
@@ -169,6 +172,8 @@ public class WallWeaponInteractor : MonoBehaviour
 
                     // Llamar a la función "OverwriteCurrentWeapon" en el script "WeaponInventory" con el índice configurado
                     weaponInventory.OverwriteCurrentWeapon(weaponIndex);
+                    PlayerShooting playerShooting = GameObject.Find("Weapons").GetComponent<PlayerShooting>();
+                    playerShooting.ApplyRotationShake();
 
                     // Cambiar el mensaje de interacción después de comprar
                     if (interactionText != null)

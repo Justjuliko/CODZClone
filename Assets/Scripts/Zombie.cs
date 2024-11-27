@@ -4,6 +4,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class Zombie : MonoBehaviour
 {
     [Header("=== ZOMBIE SETTINGS ===")]
@@ -12,6 +13,7 @@ public class Zombie : MonoBehaviour
     private NavMeshAgent agent; // Agente de navegación para movimiento
     private ZombieSpawner spawner; // Referencia al ZombieSpawner
     private Animator animator; // Referencia al Animator
+    private CapsuleCollider capsuleCollider; // Referencia al CapsuleCollider
     private float originalSpeed; // Velocidad original del agente
 
     private Player playerScript; // Referencia al script Player
@@ -37,12 +39,14 @@ public class Zombie : MonoBehaviour
     [Header("=== ANIMATION SETTINGS ===")]
     [Tooltip("Animator variable to update based on agent speed.")]
     public string animatorSpeedVariable = "speed";
+    public string animatorAttackVariable = "attack"; // Parámetro de ataque en el Animator
 
     private void Awake()
     {
         // Obtener referencias a los componentes necesarios
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
 
         // Buscar el ZombieSpawner
         spawner = Object.FindFirstObjectByType<ZombieSpawner>();
@@ -54,7 +58,7 @@ public class Zombie : MonoBehaviour
         originalSpeed = agent.speed; // Guardar la velocidad original
 
         // Buscar el objeto con la etiqueta "Player" y obtener su Transform
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = GameObject.Find("FirstPersonController")?.transform;
 
         if (player != null)
         {
@@ -63,29 +67,21 @@ public class Zombie : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Player with 'Player' tag not found in the scene.");
+            Debug.LogError("Player not found in the scene.");
         }
     }
 
     private void Update()
     {
-        // Verificar que el jugador esté presente antes de mover al zombi
         if (target != null && !IsDead())
         {
             MoveTowardsTarget();
-        }
-
-        // Manejar el daño al jugador
-        if (!IsDead())
-        {
             HandlePlayerDamage();
         }
 
-        // Actualizar la animación de velocidad
         UpdateAnimator();
     }
 
-    // Función para hacerle daño al zombi
     public void TakeDamage(float damage)
     {
         health -= damage;
@@ -96,142 +92,101 @@ public class Zombie : MonoBehaviour
         }
     }
 
-    // Función que maneja la muerte del zombi
     private void Die()
     {
-        // Detener el movimiento del agente
         agent.speed = 0;
-
-        // Activar la animación de muerte
         animator.SetBool("die", true);
+        animator.SetBool(animatorAttackVariable, false); // Asegurarse de que ataque esté en falso
+        capsuleCollider.enabled = false; // Apagar el collider
 
-        // Agregar puntos al jugador al morir el zombi
         if (playerScript != null)
         {
-            playerScript.AddPoints(60); // Agregar 60 puntos al jugador
+            playerScript.AddPoints(60);
         }
 
-        // Esperar 3 segundos antes de desactivar el zombi
-        StartCoroutine(WaitAndDeactivate(3f)); // El tiempo de espera es de 3 segundos
+        StartCoroutine(WaitAndDeactivate(3f));
     }
 
     private IEnumerator WaitAndDeactivate(float waitTime)
     {
-        // Esperar el tiempo de la animación de muerte
         yield return new WaitForSeconds(waitTime);
-
-        // Desactivar el zombi después de la animación
         gameObject.SetActive(false);
 
-        // Si el spawner se encuentra, se llama a ZombieKilled
         if (spawner != null)
         {
-            spawner.ZombieKilled(); // Llamamos a la función ZombieKilled en ZombieSpawner
+            spawner.ZombieKilled();
         }
 
-        // Restaurar la velocidad del agente a la velocidad original
         agent.speed = originalSpeed;
-
-        // Volver a desactivar el parámetro "die" en el Animator
         animator.SetBool("die", false);
-
-        // Restaurar la vida a su vida máxima
-        resetHealth();
-    }
-
-    private void resetHealth()
-    {
         health = maxHealth;
+        capsuleCollider.enabled = true; // Volver a activar el collider
     }
 
-    // Función para manejar el daño al jugador
     private void HandlePlayerDamage()
     {
         if (player != null)
         {
-            // Calcular distancia entre el zombi y el jugador
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            // Verificar si el jugador está en rango de daño
             if (distanceToPlayer <= damageRange)
             {
-                // Si el jugador está en rango, iniciar el temporizador de ataque
                 if (!playerInRange)
                 {
                     playerInRange = true;
-                    attackTimer = attackDelay; // Reiniciar temporizador de ataque
+                    attackTimer = attackDelay;
+                    animator.SetBool(animatorAttackVariable, true); // Activar parámetro de ataque
                 }
 
-                // Contar hacia atrás el temporizador de ataque
                 if (attackTimer > 0)
                 {
                     attackTimer -= Time.deltaTime;
                 }
 
-                // Si el temporizador llega a 0, atacar al jugador
                 if (attackTimer <= 0)
                 {
                     player.GetComponent<Player>().TakeDamage(damageAmount);
-                    attackTimer = attackDelay; // Reiniciar temporizador de ataque
+                    attackTimer = attackDelay;
                 }
             }
             else
             {
-                // Si el jugador está fuera de rango, reiniciar el temporizador de ataque
                 if (playerInRange)
                 {
                     playerInRange = false;
-                    attackTimer = attackDelay; // Reiniciar temporizador
+                    attackTimer = attackDelay;
+                    animator.SetBool(animatorAttackVariable, false); // Desactivar parámetro de ataque
                 }
             }
         }
     }
 
-    /// <summary>
-    /// Mueve al zombi hacia su objetivo (jugador)
-    /// </summary>
     private void MoveTowardsTarget()
     {
-        agent.SetDestination(target.position); // Mover hacia el objetivo (jugador)
+        agent.SetDestination(target.position);
     }
 
-    /// <summary>
-    /// Actualiza el parámetro de velocidad en el Animator basado en la velocidad del NavMeshAgent.
-    /// </summary>
     private void UpdateAnimator()
     {
         if (animator != null && !string.IsNullOrEmpty(animatorSpeedVariable))
         {
-            // Calcular la velocidad actual del NavMeshAgent
             float speed = agent.velocity.magnitude;
-
-            // Actualizar el parámetro en el Animator
             animator.SetFloat(animatorSpeedVariable, speed);
         }
     }
 
-    /// <summary>
-    /// Establece un nuevo objetivo para el NavMeshAgent.
-    /// </summary>
-    /// <param name="newTarget">El nuevo objetivo (Transform) al que mover el agente.</param>
     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
     }
 
-    /// <summary>
-    /// Obtiene el objetivo actual del NavMeshAgent.
-    /// </summary>
-    /// <returns>El Transform del objetivo actual.</returns>
     public Transform GetCurrentTarget()
     {
         return target;
     }
 
-    // Función para verificar si el zombi está muerto
     private bool IsDead()
     {
-        // Verificamos si la animación de muerte está activa o si la salud es 0
         return animator.GetBool("die") || health <= 0;
     }
 }
