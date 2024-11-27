@@ -22,11 +22,13 @@ public class WeaponInventory : MonoBehaviour
 
     private InputAction nextWeaponAction; // Reference to the "next" action
 
+    PlayerShooting playerShooting;
     WeaponStatsClass weaponStatsClass;
 
     private void Start()
     {
         weaponStatsClass = GetComponent<WeaponStatsClass>();
+        playerShooting = GetComponent<PlayerShooting>();
 
         // Cache all child weapons
         weaponObjects = new GameObject[transform.childCount];
@@ -117,14 +119,24 @@ public class WeaponInventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Toggle the active weapon slot.
+    /// Toggle the active weapon slot only if both slots are occupied.
     /// </summary>
     private void ToggleWeaponSlot()
     {
-        slot1 = !slot1; // Switch between true and false
-        weaponStatsClass.currentIdUpdate();
-        UpdateActiveWeapon(); // Update active weapons immediately
+        // Only toggle if both primary and secondary weapons are assigned
+        if (primaryWeaponID != -1 && secondaryWeaponID != -1)
+        {
+            slot1 = !slot1; // Switch between true and false
+            weaponStatsClass.currentIdUpdate();
+            playerShooting.SwapAmmo();
+            UpdateActiveWeapon(); // Update active weapons immediately
+        }
+        else
+        {
+            Debug.Log("Cannot switch weapons: Both slots must have weapons assigned.");
+        }
     }
+
 
     /// <summary>
     /// Activate a specific weapon by ID, ensuring no conflicts.
