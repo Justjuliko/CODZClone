@@ -81,12 +81,23 @@ public class WeaponInventory : MonoBehaviour
     /// </summary>
     private void UpdateActiveWeapon()
     {
-        if (primaryWeaponID != -1) // Check if a primary weapon exists
-            weaponObjects[primaryWeaponID].SetActive(slot1);
+        // Si la primaria y la secundaria tienen el mismo ID, mantener ambas armas activas
+        if (primaryWeaponID == secondaryWeaponID && primaryWeaponID != -1)
+        {
+            // Ambos deben estar activos si tienen el mismo ID
+            weaponObjects[primaryWeaponID].SetActive(true);
+        }
+        else
+        {
+            // Si el ID es diferente, manejar la activación de forma normal
+            if (primaryWeaponID != -1) // Verificar si existe un arma primaria
+                weaponObjects[primaryWeaponID].SetActive(slot1);
 
-        if (secondaryWeaponID != -1) // Check if a secondary weapon exists
-            weaponObjects[secondaryWeaponID].SetActive(!slot1);
+            if (secondaryWeaponID != -1) // Verificar si existe un arma secundaria
+                weaponObjects[secondaryWeaponID].SetActive(!slot1);
+        }
     }
+
 
     /// <summary>
     /// Overwrite the current weapon in the active slot.
@@ -100,43 +111,79 @@ public class WeaponInventory : MonoBehaviour
             return;
         }
 
-        if (slot1) // Replace the primary weapon
+        // Verificar si el nuevo ID es igual al ID del arma secundaria
+        if (newWeaponID == secondaryWeaponID)
         {
+            // Si el nuevo arma es igual a la secundaria, asignar al slot primario si no está ya asignada
+            if (newWeaponID == primaryWeaponID)
+            {
+                Debug.LogWarning("Cannot overwrite: New weapon ID is the same as the primary weapon.");
+                return; // No permitir la sobreescritura si el ID es igual al de la primaria también
+            }
+        }
+
+        // Si solo hay una arma (ID secundaria es -1)
+        if (secondaryWeaponID == -1)
+        {
+            // Reemplazar el arma secundaria
             if (primaryWeaponID != -1)
-                weaponObjects[primaryWeaponID].SetActive(false); // Deactivate the old primary weapon
+                weaponObjects[primaryWeaponID].SetActive(false); // Desactivar el arma primaria si existe
 
-            primaryWeaponID = newWeaponID;
+            secondaryWeaponID = newWeaponID;  // Asignar la nueva arma a la secundaria
+            ToggleWeaponSlot();
+            weaponStatsClass.currentIdUpdate();
+            playerShooting.RefillAmmo();
+            Debug.Log("Overwrite");
         }
-        else // Replace the secondary weapon
+        else
         {
-            if (secondaryWeaponID != -1)
-                weaponObjects[secondaryWeaponID].SetActive(false); // Deactivate the old secondary weapon
+            // Si ambos ID son diferentes de -1, reemplazar el arma activa (primaria o secundaria)
+            if (slot1) // Si se está usando el arma primaria
+            {
+                if (primaryWeaponID != -1)
+                    weaponObjects[primaryWeaponID].SetActive(false); // Desactivar el arma primaria anterior
 
-            secondaryWeaponID = newWeaponID;
+                primaryWeaponID = newWeaponID;  // Asignar la nueva arma a la primaria
+                weaponStatsClass.currentIdUpdate();
+                playerShooting.RefillAmmo();
+                Debug.Log("Overwrite");
+            }
+            else // Si se está usando el arma secundaria
+            {
+                if (secondaryWeaponID != -1)
+                    weaponObjects[secondaryWeaponID].SetActive(false); // Desactivar el arma secundaria anterior
+
+                secondaryWeaponID = newWeaponID;  // Asignar la nueva arma a la secundaria
+                weaponStatsClass.currentIdUpdate();
+                playerShooting.RefillAmmo();
+                Debug.Log("Overwrite");
+            }
         }
 
-        UpdateActiveWeapon(); // Ensure the correct weapon is active
+        UpdateActiveWeapon(); // Asegurarse de que el arma activa se actualice correctamente
     }
+
 
     /// <summary>
     /// Toggle the active weapon slot only if both slots are occupied.
     /// </summary>
     private void ToggleWeaponSlot()
     {
-        // Only toggle if both primary and secondary weapons are assigned
+        // Solo hacer toggle si ambos slots están ocupados
         if (primaryWeaponID != -1 && secondaryWeaponID != -1)
         {
-            slot1 = !slot1; // Switch between true and false
+            slot1 = !slot1; // Cambiar entre primaria y secundaria
+            playerShooting.saveOtherWeaponMaxAmmo();
             weaponStatsClass.currentIdUpdate();
-            playerShooting.SwapAmmo();
-            UpdateActiveWeapon(); // Update active weapons immediately
+            playerShooting.SwapAmmo();            
+            UpdateActiveWeapon(); // Actualizar las armas activas de inmediato
+            playerShooting.ApplyRotationShake();
         }
         else
         {
-            Debug.Log("Cannot switch weapons: Both slots must have weapons assigned.");
+            Debug.Log("No se puede cambiar de arma: Ambos slots deben tener armas asignadas.");
         }
     }
-
 
     /// <summary>
     /// Activate a specific weapon by ID, ensuring no conflicts.
@@ -146,7 +193,7 @@ public class WeaponInventory : MonoBehaviour
     {
         for (int i = 0; i < weaponObjects.Length; i++)
         {
-            weaponObjects[i].SetActive(i == weaponID); // Only activate the specified weapon
+            weaponObjects[i].SetActive(i == weaponID); // Solo activar el arma especificada
         }
     }
 

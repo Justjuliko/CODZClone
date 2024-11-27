@@ -20,6 +20,8 @@ public class PlayerShooting : MonoBehaviour
     [Header("=== OTHER WEAPON AMMO ===")]
     private int otherWeaponMagazineAmmo;
     private int otherWeaponReserveAmmo;
+    int maxOtherMagazineAmmo;
+    int maxOtherReserveAmmo;
 
     [Header("=== UI SETTINGS ===")]
     public TMP_Text ammoText;
@@ -258,6 +260,30 @@ public class PlayerShooting : MonoBehaviour
             obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
         }
     }
+    public void ApplyRotationShake()
+    {
+        // Desencadenamos la rotación de todos los objetos animables
+        foreach (var obj in animableObjects)
+        {
+            StartCoroutine(RotateBackToOriginal(obj));
+        }
+    }
+
+    private IEnumerator RotateBackToOriginal(GameObject obj)
+    {
+        // Obtener la rotación original del objeto
+        Quaternion originalRotation = obj.transform.localRotation;
+
+        // Realizar la rotación rápida en Y de 25 grados
+        obj.transform.Rotate(0f, 25f, 0f, Space.Self);
+
+        // Esperamos un breve periodo antes de devolver la rotación a la original
+        yield return new WaitForSeconds(0.1f);
+
+        // Regresamos la rotación a la original
+        obj.transform.localRotation = originalRotation;
+    }
+
 
     private void UpdateAmmoUI()
     {
@@ -313,6 +339,18 @@ public class PlayerShooting : MonoBehaviour
     {
         currentMagazineAmmo = maxMagazineAmmo;
         currentReserveAmmo = maxReserveAmmo;
+
+        UpdateAmmoUI();
+    }
+    public void saveOtherWeaponMaxAmmo()
+    {
+        maxOtherMagazineAmmo = maxMagazineAmmo;
+        maxOtherReserveAmmo = maxReserveAmmo;
+    }
+    public void RefillSecondaryAmmo()
+    {
+        otherWeaponMagazineAmmo = maxOtherMagazineAmmo;
+        otherWeaponReserveAmmo = maxOtherReserveAmmo;
 
         UpdateAmmoUI();
     }

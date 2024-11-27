@@ -99,11 +99,15 @@ public class Player : MonoBehaviour
             healthBar.value = currentHealth;
         }
     }
-
     // Public method to add points to the player
     public void AddPoints(int points)
     {
         currentPoints += points;
+        UpdatePointsUI(); // Update the points display
+    }
+    public void RemovePoints(int points)
+    {
+        currentPoints -= points;
         UpdatePointsUI(); // Update the points display
     }
 
