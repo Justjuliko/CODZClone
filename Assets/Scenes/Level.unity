@@ -1166,7 +1166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &487811543
 Transform:
   m_ObjectHideFlags: 0
@@ -1894,7 +1894,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 891391694}
-  - component: {fileID: 891391695}
+  - component: {fileID: 891391698}
+  - component: {fileID: 891391697}
   - component: {fileID: 891391696}
   m_Layer: 0
   m_Name: Weapons
@@ -1922,7 +1923,39 @@ Transform:
   - {fileID: 1135597523}
   m_Father: {fileID: 1236641469}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &891391695
+--- !u!114 &891391696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891391693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5c81973fb889645ae780ec2996c779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponDamage: 20
+  fireRate: 0.5
+  maxMagazineAmmo: 7
+  maxReserveAmmo: 49
+  reloadTime: 2
+  currentMagazineAmmo: 0
+  currentReserveAmmo: 0
+  ammoText: {fileID: 1129190651}
+  reserveAmmoText: {fileID: 549472215}
+  warningText: {fileID: 180944680}
+  auto: 0
+  animableObjects:
+  - {fileID: 912329593}
+  - {fileID: 1355445860}
+  - {fileID: 1029244882}
+  - {fileID: 1568577312}
+  recoilAngle: -5
+  reloadAngle: {x: 30, y: 0, z: 0}
+  aimPosition: {x: 0, y: -0.2, z: 0.45}
+  damageRange: 20
+--- !u!114 &891391697
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1936,9 +1969,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slot1: 1
   primaryWeaponID: -1
-  secondaryWeaponID: -1
+  secondaryWeaponID: 1
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
---- !u!114 &891391696
+--- !u!114 &891391698
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1947,26 +1980,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 891391693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e5c81973fb889645ae780ec2996c779, type: 3}
+  m_Script: {fileID: 11500000, guid: cf4991f4a4950f04ba7707add7b647e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponDamage: 25
-  fireRate: 0.5
-  maxAmmo: 30
-  ammoReserve: 90
-  reloadTime: 2
-  ammoText: {fileID: 1129190651}
-  reserveAmmoText: {fileID: 549472215}
-  warningText: {fileID: 180944680}
-  auto: 1
-  animableObjects:
-  - {fileID: 912329593}
-  - {fileID: 1355445860}
-  - {fileID: 1029244882}
-  - {fileID: 1568577312}
-  recoilAngle: -5
-  reloadAngle: {x: 30, y: 0, z: 0}
-  damageRange: 20
+  newWeaponDamage: 0
+  newFireRate: 0
+  newMaxMagazineAmmo: 0
+  newReserveAmmo: 0
+  newReloadTime: 0
+  newAuto: 0
+  newRecoilAngle: 0
+  newReloadAngle: {x: 0, y: 0, z: 0}
+  newAimPosition: {x: 0, y: 0, z: 0}
+  newDamageRange: 0
 --- !u!4 &900494267 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 668735768885291391, guid: 91ad7bf144749b04ab484a680630a040, type: 3}
@@ -3856,7 +3882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.52
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3864,7 +3890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_LocalRotation.w

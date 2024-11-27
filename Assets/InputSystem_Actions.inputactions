@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Aim",
+                    "type": "Button",
+                    "id": "dec68d3d-64b2-4bb4-87a8-658f6ade0e2a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Reload",
                     "type": "Button",
                     "id": "e714df7a-177f-44eb-a44e-5db5e208f68e",
@@ -90,15 +99,6 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Aim",
-                    "type": "Button",
-                    "id": "dec68d3d-64b2-4bb4-87a8-658f6ade0e2a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -505,7 +505,7 @@
                 {
                     "name": "",
                     "id": "959381f8-3446-4f6b-8a69-f7b5ae8b1c58",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

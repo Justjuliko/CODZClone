@@ -1333,8 +1333,6 @@ GameObject:
   - component: {fileID: 127867265787259768}
   - component: {fileID: -8674845371289287994}
   - component: {fileID: 2404781928752199575}
-  - component: {fileID: 6694485168950590928}
-  - component: {fileID: 2354019832171683168}
   - component: {fileID: 7318008369664032855}
   m_Layer: 0
   m_Name: Zombie
@@ -1454,34 +1452,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6694485168950590928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6660184903045082040}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cd864de9bff8a744ae9ce8aa642db6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animatorSpeedVariable: speed
---- !u!114 &2354019832171683168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6660184903045082040}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87fd9de11d2ecf24eb5b320579281dd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 25
-  damageRange: 2
-  attackDelay: 0.5
 --- !u!114 &7318008369664032855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1494,9 +1464,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a578d5661a60224cbb2d64f0909c19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
   health: 100
-  speed: 3.5
-  currentHealth: 0
+  damageAmount: 10
+  damageRange: 2
+  attackDelay: 0.5
+  animatorSpeedVariable: speed
 --- !u!1 &6906493944559020957
 GameObject:
   m_ObjectHideFlags: 0

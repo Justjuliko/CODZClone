@@ -9,10 +9,10 @@ public class WeaponInventory : MonoBehaviour
 
     [Header("=== DEBUG INFO ===")]
     [Tooltip("ID of the primary weapon in the inventory.")]
-    [ReadOnly] public int primaryWeaponID = -1; // -1 indicates no weapon assigned
+    public int primaryWeaponID = -1; // -1 indicates no weapon assigned
 
     [Tooltip("ID of the secondary weapon in the inventory.")]
-    [ReadOnly] public int secondaryWeaponID = -1; // -1 indicates no weapon assigned
+    public int secondaryWeaponID = -1; // -1 indicates no weapon assigned
 
     private GameObject[] weaponObjects; // Store references to child weapon objects
 
@@ -22,8 +22,12 @@ public class WeaponInventory : MonoBehaviour
 
     private InputAction nextWeaponAction; // Reference to the "next" action
 
+    WeaponStatsClass weaponStatsClass;
+
     private void Start()
     {
+        weaponStatsClass = GetComponent<WeaponStatsClass>();
+
         // Cache all child weapons
         weaponObjects = new GameObject[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
@@ -118,6 +122,7 @@ public class WeaponInventory : MonoBehaviour
     private void ToggleWeaponSlot()
     {
         slot1 = !slot1; // Switch between true and false
+        weaponStatsClass.currentIdUpdate();
         UpdateActiveWeapon(); // Update active weapons immediately
     }
 
