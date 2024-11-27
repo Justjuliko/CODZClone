@@ -92,6 +92,9 @@ public class DoorInteractor : MonoBehaviour
 
                 // Remover puerta
                 gameObject.SetActive(false);
+
+                // Quitar mensaje
+                interactionText.text = "";
             }
             else
             {

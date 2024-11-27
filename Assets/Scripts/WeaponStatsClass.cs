@@ -110,7 +110,7 @@ public class WeaponStatsClass : MonoBehaviour
                 newReserveAmmo = 150;
                 newReloadTime = 3f;
                 newAuto = true;
-                newRecoilAngle = -2f;
+                newRecoilAngle = -0.5f;
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.38f, 0.33f);
                 newOriginalPosition = new Vector3(0.28f, -0.52f, 0.33f);
