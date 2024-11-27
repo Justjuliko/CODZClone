@@ -44,23 +44,46 @@ public class ZombieSpawner : MonoBehaviour
     [Tooltip("Number of zombies required to advance to the next round.")]
     [ReadOnly] public int killsToAdvanceCurrent;  // Display kills required for next round
 
+    [Tooltip("Text for displaying the current round.")]
+    public TMPro.TMP_Text roundText; // NEW: Text for displaying current round
+
     private List<GameObject> zombiePool = new List<GameObject>();
     private int killsThisRound = 0;
     private float spawnTimer;
+    private bool isBetweenRounds = false;  // NEW: Flag to indicate if we're between rounds
 
     // Number of zombies the player needs to kill to advance each round
     private int killsToAdvanceThisRoundInternal;
+    private float roundDelayTimer = 0f; // NEW: Timer for the delay between rounds
 
     private void Start()
     {
         currentSpawnInterval = baseSpawnInterval;
         InitializeZombiePool();
         killsToAdvanceThisRoundInternal = baseKillsToAdvance;  // Set initial kills to advance
+        UpdateRoundText(); // Initialize round display
     }
 
     private void Update()
     {
-        if (zombiesAlive < maxZombies && spawnTimer <= 0)
+        // Handle the delay between rounds
+        if (isBetweenRounds)
+        {
+            roundDelayTimer -= Time.deltaTime;
+            if (roundDelayTimer <= 0)
+            {
+                isBetweenRounds = false;
+                spawnTimer = currentSpawnInterval; // Reset spawn timer to start spawning zombies
+            }
+            return;  // Don't spawn zombies until the delay is over
+        }
+
+        // Determine the number of remaining zombies needed to advance the round
+        int remainingZombiesNeeded = killsToAdvanceThisRoundInternal - killsThisRound;
+        int maxSpawnableZombies = Mathf.Min(maxZombies, remainingZombiesNeeded);
+
+        // Generate zombies only if conditions allow
+        if (zombiesAlive < maxSpawnableZombies && spawnTimer <= 0)
         {
             SpawnZombie();
             spawnTimer = currentSpawnInterval;
@@ -72,7 +95,6 @@ public class ZombieSpawner : MonoBehaviour
     // Initialize the object pool for zombies
     private void InitializeZombiePool()
     {
-        // Initialize pool to always have 24 zombies at start
         int initialPoolSize = 24; // Always have 24 zombies in the pool
 
         foreach (var prefab in zombiePrefabs)
@@ -153,14 +175,29 @@ public class ZombieSpawner : MonoBehaviour
         // Set the current max zombies for debugging
         maxZombiesCurrent = maxZombies;
 
-        // Increase kills required to advance, but stop increasing after 60
-        killsToAdvanceThisRoundInternal = Mathf.Min(90, Mathf.RoundToInt(baseKillsToAdvance + (currentRound - 1) * 6));  // Progresión simple para kills
+        // Increase kills required to advance, but stop increasing after 90
+        killsToAdvanceThisRoundInternal = Mathf.Min(90, Mathf.RoundToInt(baseKillsToAdvance + (currentRound - 1) * 6));  // Simple progression for kills
 
         // Set the current kills required to advance for debugging
         killsToAdvanceCurrent = killsToAdvanceThisRoundInternal;
 
         // Adjust the spawn interval, but stop decreasing after 0.7 seconds
         currentSpawnInterval = Mathf.Max(0.7f, baseSpawnInterval - 0.1f * (currentRound - 1)); // Decrease spawn interval as round increases
+
+        UpdateRoundText(); // Update round display
+
+        // Add a delay before starting to spawn zombies in the next round
+        isBetweenRounds = true;
+        roundDelayTimer = 1.5f; // 1.5 seconds delay
+    }
+
+    // Update the round text display (only show the round number)
+    private void UpdateRoundText()
+    {
+        if (roundText != null)
+        {
+            roundText.text = $"{currentRound}"; // Show only the round number
+        }
     }
 }
 

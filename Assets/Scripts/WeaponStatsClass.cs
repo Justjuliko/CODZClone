@@ -22,6 +22,7 @@ public class WeaponStatsClass : MonoBehaviour
 
     private PlayerShooting playerShootingScript;
     private WeaponInventory inventory;
+    private Vector3 newOriginalPosition;
 
     private void Start()
     {
@@ -65,7 +66,7 @@ public class WeaponStatsClass : MonoBehaviour
                 if (storedReserveAmmo != null && currentWeaponID < storedReserveAmmo.Length)
                 {
                     // Actualizar la configuración del arma en el script de PlayerShooting
-                    playerShootingScript.UpdateWeaponSettings(newWeaponDamage, newFireRate, newMaxMagazineAmmo, newReserveAmmo, newReloadTime, newAuto, newRecoilAngle, newReloadAngle, newAimPosition, newDamageRange);
+                    playerShootingScript.UpdateWeaponSettings(newWeaponDamage, newFireRate, newMaxMagazineAmmo, newReserveAmmo, newReloadTime, newAuto, newRecoilAngle, newReloadAngle, newAimPosition, newDamageRange, newOriginalPosition);
                 }
                 else
                 {
@@ -98,6 +99,7 @@ public class WeaponStatsClass : MonoBehaviour
                 newRecoilAngle = -5f;
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.2f, 0.45f);
+                newOriginalPosition = new Vector3(0.281f, -0.36f, 0.45f);
                 newDamageRange = 20;
                 break;
 
@@ -111,6 +113,7 @@ public class WeaponStatsClass : MonoBehaviour
                 newRecoilAngle = -2f;
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.38f, 0.33f);
+                newOriginalPosition = new Vector3(0.28f, -0.52f, 0.33f);
                 newDamageRange = 30;
                 break;
 
@@ -124,6 +127,7 @@ public class WeaponStatsClass : MonoBehaviour
                 newRecoilAngle = -8f;
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.26f, 0.2f);
+                newOriginalPosition = new Vector3(0.276f, -0.406f, 0.203f);
                 newDamageRange = 10;
                 break;
 
@@ -137,6 +141,7 @@ public class WeaponStatsClass : MonoBehaviour
                 newRecoilAngle = -5f;
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.165f, 0.278f);
+                newOriginalPosition = new Vector3(0.271f, -0.303f, 0.278f);
                 newDamageRange = 50;
                 break;
 

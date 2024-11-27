@@ -35,7 +35,7 @@ public class PlayerShooting : MonoBehaviour
     public Vector3 reloadAngle = new Vector3(-10f, 5f, 0f);
 
     public Vector3 aimPosition = new Vector3(0.1f, -0.2f, 0f);
-    private Vector3 originalPosition;
+    public Vector3 originalPosition;
 
     [Header("=== DEBUG SETTINGS ===")]
     public float damageRange = 20f;
@@ -47,7 +47,12 @@ public class PlayerShooting : MonoBehaviour
     private InputAction reloadAction;
     private InputAction aimAction;
 
-    private Player playerScript;
+    [Header("=== OTHER COMPONENTS ===")]
+    private FirstPersonController firstPersonController; // Referencia al controlador de primera persona
+    private Player playerScript; // Referencia al script del jugador
+
+    [Header("=== AIM RETICLE ===")]
+    public GameObject aimReticle; // Objeto que actúa como retícula
 
     private void Awake()
     {
@@ -75,7 +80,11 @@ public class PlayerShooting : MonoBehaviour
 
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
-        originalPosition = animableObjects[0].transform.localPosition;
+        // Asegurar que la retícula está encendida al inicio
+        if (aimReticle != null)
+        {
+            aimReticle.SetActive(true);
+        }
     }
 
     private void Update()
@@ -125,17 +134,31 @@ public class PlayerShooting : MonoBehaviour
 
     private void StartAiming()
     {
+        // Cambiar la posición de las armas para apuntar
         foreach (var obj in animableObjects)
         {
             obj.transform.localPosition = aimPosition;
+        }
+
+        // Desactivar la retícula de apuntado
+        if (aimReticle != null)
+        {
+            aimReticle.SetActive(false);
         }
     }
 
     private void StopAiming()
     {
+        // Restaurar la posición original de las armas
         foreach (var obj in animableObjects)
         {
             obj.transform.localPosition = originalPosition;
+        }
+
+        // Activar la retícula de apuntado
+        if (aimReticle != null)
+        {
+            aimReticle.SetActive(true);
         }
     }
 
@@ -255,7 +278,7 @@ public class PlayerShooting : MonoBehaviour
 
     public void UpdateWeaponSettings(float newWeaponDamage, float newFireRate, int newMaxAmmo, int newAmmoReserve,
                                   float newReloadTime, bool newAuto, float newRecoilAngle, Vector3 newReloadAngle,
-                                  Vector3 newAimPosition, float newDamageRange)
+                                  Vector3 newAimPosition, float newDamageRange, Vector3 newOriginalPosition)
     {
         weaponDamage = newWeaponDamage;
         fireRate = newFireRate;
@@ -267,6 +290,7 @@ public class PlayerShooting : MonoBehaviour
         reloadAngle = newReloadAngle;
         aimPosition = newAimPosition;
         damageRange = newDamageRange;
+        originalPosition = newOriginalPosition;
 
         UpdateAmmoUI();
     }
