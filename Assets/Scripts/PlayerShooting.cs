@@ -128,9 +128,8 @@ public class PlayerShooting : MonoBehaviour
     private void Shoot()
     {
         // Play shooting logic (damage to zombies, sound, etc.)
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, damageRange);
-
-        foreach (RaycastHit hit in hits)
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, damageRange))
         {
             if (hit.collider.CompareTag("Zombie"))
             {

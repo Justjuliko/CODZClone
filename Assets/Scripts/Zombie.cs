@@ -12,6 +12,8 @@ public class Zombie : MonoBehaviour
     private Animator animator;  // Referencia al Animator
     private float originalSpeed;  // Velocidad original del agente
 
+    private Player playerScript;  // Referencia al script Player
+
     private void Awake()
     {
         // Buscar el ZombieSpawner usando el método actualizado
@@ -28,6 +30,9 @@ public class Zombie : MonoBehaviour
     {
         health = maxHealth;
         originalSpeed = agent.speed;  // Guardar la velocidad original
+
+        // Buscar el objeto con la etiqueta "Player" y obtener su script Player
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     // Función para hacerle daño al zombi
@@ -49,6 +54,12 @@ public class Zombie : MonoBehaviour
 
         // Activar la animación de muerte
         animator.SetBool("die", true);
+
+        // Agregar puntos al jugador al morir el zombi
+        if (playerScript != null)
+        {
+            playerScript.AddPoints(60);  // Agregar 60 puntos al jugador
+        }
 
         // Esperar 3 segundos antes de desactivar el zombi
         StartCoroutine(WaitAndDeactivate(3f));  // El tiempo de espera es de 3 segundos
