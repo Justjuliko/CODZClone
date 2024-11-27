@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -24,6 +26,18 @@ public class ZombieSpawner : MonoBehaviour
     [Header("=== ROUND SETTINGS ===")]
     [Tooltip("Initial number of kills required to advance to the next round.")]
     public int baseKillsToAdvance = 10;
+
+    [Tooltip("Amount by which zombie max health increases each round.")]
+    public float healthIncreasePerRound = 50f;
+
+    [Tooltip("Maximum health zombies can reach.")]
+    public float maxZombieHealth = 400f;
+
+    [Tooltip("Amount by which zombie speed increases each round.")]
+    public float speedIncreasePerRound = 0.5f;
+
+    [Tooltip("Maximum speed zombies can reach.")]
+    public float maxZombieSpeed = 5f;
 
     [Header("=== DEBUG INFO ===")]
     [Tooltip("Current number of zombies alive.")]
@@ -120,6 +134,13 @@ public class ZombieSpawner : MonoBehaviour
                 {
                     zombie.transform.position = spawnPoint.position;
                     zombie.transform.rotation = spawnPoint.rotation;
+                    Zombie zombieScript = zombie.GetComponent<Zombie>();
+
+                    if (zombieScript != null)
+                    {
+                        StartCoroutine(zombieScript.HandleSpawn());
+                    }
+
                     zombie.SetActive(true);
                     zombiesAlive++;
                 }
@@ -127,6 +148,7 @@ public class ZombieSpawner : MonoBehaviour
             }
         }
     }
+
 
     // Get a random active spawn point
     private Transform GetActiveSpawnPoint()
@@ -181,6 +203,9 @@ public class ZombieSpawner : MonoBehaviour
         // Set the current kills required to advance for debugging
         killsToAdvanceCurrent = killsToAdvanceThisRoundInternal;
 
+        // Aumentar atributos de los zombis
+        IncreaseZombieStats();
+
         // Adjust the spawn interval, but stop decreasing after 0.7 seconds
         currentSpawnInterval = Mathf.Max(0.7f, baseSpawnInterval - 0.1f * (currentRound - 1)); // Decrease spawn interval as round increases
 
@@ -197,6 +222,23 @@ public class ZombieSpawner : MonoBehaviour
         if (roundText != null)
         {
             roundText.text = $"{currentRound}"; // Show only the round number
+        }
+    }
+    private void IncreaseZombieStats()
+    {
+        foreach (var zombie in zombiePool)
+        {
+            Zombie zombieScript = zombie.GetComponent<Zombie>();
+            if (zombieScript != null)
+            {
+                // Incrementar la vida máxima dentro del límite permitido
+                zombieScript.maxHealth = Mathf.Min(maxZombieHealth, zombieScript.maxHealth + healthIncreasePerRound);
+                zombieScript.health = zombieScript.maxHealth; // Restaurar la vida al máximo actualizado
+
+                // Incrementar la velocidad original dentro del límite permitido
+                zombieScript.originalSpeed = Mathf.Min(maxZombieSpeed, zombieScript.originalSpeed + speedIncreasePerRound);
+                zombieScript.GetComponent<NavMeshAgent>().speed = zombieScript.originalSpeed; // Actualizar velocidad actual
+            }
         }
     }
 }

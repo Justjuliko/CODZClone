@@ -14,7 +14,7 @@ public class Zombie : MonoBehaviour
     private ZombieSpawner spawner; // Referencia al ZombieSpawner
     private Animator animator; // Referencia al Animator
     private CapsuleCollider capsuleCollider; // Referencia al CapsuleCollider
-    private float originalSpeed; // Velocidad original del agente
+    public float originalSpeed = 1; // Velocidad original del agente
 
     private Player playerScript; // Referencia al script Player
 
@@ -55,7 +55,6 @@ public class Zombie : MonoBehaviour
     private void Start()
     {
         health = maxHealth;
-        originalSpeed = agent.speed; // Guardar la velocidad original
 
         // Buscar el objeto con la etiqueta "Player" y obtener su Transform
         player = GameObject.Find("FirstPersonController")?.transform;
@@ -188,5 +187,13 @@ public class Zombie : MonoBehaviour
     private bool IsDead()
     {
         return animator.GetBool("die") || health <= 0;
+    }
+    public IEnumerator HandleSpawn()
+    {
+        agent.speed = 0; // Detener al zombi
+        animator.SetBool("spawn", true); // Activar el parámetro spawn
+        yield return new WaitForSeconds(1.4f); // Esperar 1.4 segundos
+        animator.SetBool("spawn", false); // Desactivar el parámetro spawn
+        agent.speed = originalSpeed; // Restaurar la velocidad original
     }
 }
