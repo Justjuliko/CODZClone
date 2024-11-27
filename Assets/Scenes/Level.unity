@@ -1959,11 +1959,28 @@ MonoBehaviour:
   reserveAmmoText: {fileID: 549472215}
   warningText: {fileID: 180944680}
   auto: 1
+  animableObjects:
+  - {fileID: 912329593}
+  - {fileID: 1355445860}
+  - {fileID: 1029244882}
+  - {fileID: 1568577312}
+  recoilAngle: -5
+  reloadAngle: {x: 30, y: 0, z: 0}
   damageRange: 20
 --- !u!4 &900494267 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 668735768885291391, guid: 91ad7bf144749b04ab484a680630a040, type: 3}
   m_PrefabInstance: {fileID: 2016688038}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &912329593 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 199669651405181594, guid: 41236ddb97b001d499cadd3503c086dc, type: 3}
+  m_PrefabInstance: {fileID: 1091210812}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1029244882 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4205521026231025682, guid: f7a69565ab2ff984789da792b0969f4b, type: 3}
+  m_PrefabInstance: {fileID: 1608859667}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1053287151
 PrefabInstance:
@@ -2835,6 +2852,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 668735768885291391, guid: 91ad7bf144749b04ab484a680630a040, type: 3}
   m_PrefabInstance: {fileID: 1341051523}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1355445860 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4311248730837266121, guid: c20daf91d2bce304c85fec03f5fafd3b, type: 3}
+  m_PrefabInstance: {fileID: 265382733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1404517918
 GameObject:
   m_ObjectHideFlags: 0
@@ -3134,6 +3156,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548754099}
   m_CullTransparentMesh: 1
+--- !u!1 &1568577312 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2352997721424495953, guid: bb0cd604d12965b48bc6104313af13d8, type: 3}
+  m_PrefabInstance: {fileID: 1135597522}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1608859667
 PrefabInstance:
   m_ObjectHideFlags: 0
