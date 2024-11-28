@@ -1479,6 +1479,8 @@ MonoBehaviour:
   minLoopInterval: 2
   maxLoopInterval: 15
   attackSound: {fileID: 8300000, guid: 05a426cfb7c99d04d9e00125f0afd555, type: 3}
+  spawnSound: {fileID: 8300000, guid: ba4da7d55b47ced4bacaeb4aface9c48, type: 3}
+  spawnSoundVolume: 0.3
 --- !u!1 &6906493944559020957
 GameObject:
   m_ObjectHideFlags: 0

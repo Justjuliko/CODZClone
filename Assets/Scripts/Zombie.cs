@@ -45,6 +45,12 @@ public class Zombie : MonoBehaviour
     public AudioClip attackSound;
     private AudioSource attackAudioSource;
 
+    [Tooltip("Sound to play when the zombie spawns.")]
+    public AudioClip spawnSound; // Sonido al spawnear
+    private AudioSource spawnAudioSource; // AudioSource dedicado al spawn
+    public float spawnSoundVolume = 1.0f; // Volumen del sonido de spawn
+
+
     private void Awake()
     {
         // Componentes necesarios
@@ -56,6 +62,7 @@ public class Zombie : MonoBehaviour
         // Configurar AudioSources
         loopAudioSource = gameObject.AddComponent<AudioSource>();
         attackAudioSource = gameObject.AddComponent<AudioSource>();
+        spawnAudioSource = gameObject.AddComponent <AudioSource>();
 
         // Configuración del AudioSource de bucle
         loopAudioSource.loop = false;
@@ -66,9 +73,16 @@ public class Zombie : MonoBehaviour
         attackAudioSource.loop = false;
         attackAudioSource.playOnAwake = false;
 
+        // Configuración del AudioSource de spawn
+        spawnAudioSource.clip = spawnSound;
+        spawnAudioSource.loop = false;
+        spawnAudioSource.playOnAwake = false;
+        spawnAudioSource.volume = spawnSoundVolume; // Asignar volumen personalizado
+
         // Habilitar sonido espacial
         ConfigureSpatialAudio(loopAudioSource);
         ConfigureSpatialAudio(attackAudioSource);
+        ConfigureSpatialAudio(spawnAudioSource);
     }
 
     private void ConfigureSpatialAudio(AudioSource audioSource)
@@ -244,8 +258,23 @@ public class Zombie : MonoBehaviour
     {
         agent.speed = 0;
         animator.SetBool("spawn", true);
+
+        // Reproducir el sonido de spawn si está configurado
+        if (spawnSound != null)
+        {
+            spawnAudioSource.gameObject.SetActive(true);
+            spawnAudioSource.enabled = true;
+            spawnAudioSource.Play();
+        }
+
         yield return new WaitForSeconds(1.4f);
         animator.SetBool("spawn", false);
+
+        if (spawnAudioSource.isPlaying)
+        {
+            spawnAudioSource.Stop();
+        }
+
         agent.speed = originalSpeed;
     }
 }

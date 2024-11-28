@@ -68,6 +68,11 @@ public class PlayerShooting : MonoBehaviour
     public AudioClip reloadSound; // Clip de sonido para la recarga
     private AudioSource reloadAudioSource; // AudioSource dedicado al sonido de recarga
 
+    [Header("=== ZOMBIE HIT SOUND SETTINGS ===")]
+    public AudioClip zombieHitSound; // Clip de sonido al golpear al zombi
+    public float zombieHitSoundVolume = 1.0f; // Volumen configurable
+    private AudioSource zombieHitAudioSource; // AudioSource para el sonido de impacto
+
     [Header("=== LIGHT SETTINGS ===")]
     public List<GameObject> muzzleflashLights;
 
@@ -118,6 +123,12 @@ public class PlayerShooting : MonoBehaviour
         reloadAudioSource.loop = true; // Activar el bucle
         reloadAudioSource.playOnAwake = false;
 
+        // Configurar AudioSource para el sonido de impacto
+        zombieHitAudioSource = gameObject.AddComponent<AudioSource>();
+        zombieHitAudioSource.clip = zombieHitSound;
+        zombieHitAudioSource.volume = zombieHitSoundVolume;
+        zombieHitAudioSource.loop = false;
+        zombieHitAudioSource.playOnAwake = false;
     }
 
     private void Update()
@@ -192,11 +203,25 @@ public class PlayerShooting : MonoBehaviour
                     {
                         playerScript.AddPoints(10);
                     }
+                    // Reproducir sonido de impacto
+                    if (zombieHitAudioSource != null && zombieHitSound != null)
+                    {
+                        zombieHitAudioSource.Play();
+                    }
+
+                    // Obtener el efecto de sangre del pool y posicionarlo en el punto de impacto
+                    ObjectPool bloodPool = FindFirstObjectByType<ObjectPool>();
+                    if (bloodPool != null)
+                    {
+                        GameObject bloodEffect = bloodPool.GetObject();
+                        bloodEffect.transform.position = hit.point;
+                        bloodEffect.transform.rotation = Quaternion.LookRotation(hit.normal);
+                    }
                 }
             }
         }
 
-        ApplyRecoil();
+            ApplyRecoil();
 
         if (muzzleflashLights != null && muzzleflashLights.Count > 0)
         {
