@@ -1421,7 +1421,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1472,6 +1472,13 @@ MonoBehaviour:
   attackDelay: 0.5
   animatorSpeedVariable: speed
   animatorAttackVariable: attack
+  loopSounds:
+  - {fileID: 8300000, guid: 980fba1911e696349984fb0924a7c19a, type: 3}
+  - {fileID: 8300000, guid: 3f904892d50b1994f90dd1e5c1509bec, type: 3}
+  - {fileID: 8300000, guid: d3919d06b080e9147ad3e23a52fc4c7f, type: 3}
+  minLoopInterval: 5
+  maxLoopInterval: 30
+  attackSound: {fileID: 8300000, guid: 05a426cfb7c99d04d9e00125f0afd555, type: 3}
 --- !u!1 &6906493944559020957
 GameObject:
   m_ObjectHideFlags: 0

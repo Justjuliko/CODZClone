@@ -10,64 +10,94 @@ public class Zombie : MonoBehaviour
     [Header("=== ZOMBIE SETTINGS ===")]
     public float maxHealth = 100f;
     public float health = 100f; // Salud del zombi
-    private NavMeshAgent agent; // Agente de navegación para movimiento
-    private ZombieSpawner spawner; // Referencia al ZombieSpawner
-    private Animator animator; // Referencia al Animator
-    private CapsuleCollider capsuleCollider; // Referencia al CapsuleCollider
-    public float originalSpeed = 1; // Velocidad original del agente
+    private NavMeshAgent agent;
+    private ZombieSpawner spawner;
+    private Animator animator;
+    private CapsuleCollider capsuleCollider;
+    public float originalSpeed = 1;
 
-    private Player playerScript; // Referencia al script Player
+    private Player playerScript;
 
     [Header("=== DAMAGE SETTINGS ===")]
-    [Tooltip("Damage that the zombie deals when it touches the player.")]
     public float damageAmount = 10f;
+    public float damageRange = 2f;
+    public float attackDelay = 2f;
 
-    [Tooltip("Detection range to trigger damage.")]
-    public float damageRange = 2f; // Distancia a la que el zombi inflige daño
-
-    [Tooltip("Time in seconds before the zombie attacks once in range.")]
-    public float attackDelay = 2f; // Retraso antes de atacar al jugador
-
-    private Transform player; // Referencia al jugador
-    private float attackTimer = 0f; // Temporizador para ataques
-    private bool playerInRange = false; // Indica si el jugador está en rango
+    private Transform player;
+    private float attackTimer = 0f;
+    private bool playerInRange = false;
 
     [Header("=== NAVIGATION SETTINGS ===")]
-    [Tooltip("Target that the NavMeshAgent will move towards.")]
-    private Transform target;  // Now private to find automatically
+    private Transform target;
 
     [Header("=== ANIMATION SETTINGS ===")]
-    [Tooltip("Animator variable to update based on agent speed.")]
     public string animatorSpeedVariable = "speed";
-    public string animatorAttackVariable = "attack"; // Parámetro de ataque en el Animator
+    public string animatorAttackVariable = "attack";
+
+    [Header("=== AUDIO SETTINGS ===")]
+    [Tooltip("Array of looping sounds to play randomly.")]
+    public AudioClip[] loopSounds; // Array para almacenar múltiples sonidos de bucle
+    private AudioSource loopAudioSource;
+    public float minLoopInterval = 5f;
+    public float maxLoopInterval = 10f;
+
+    [Tooltip("Sound to play when the zombie attacks.")]
+    public AudioClip attackSound;
+    private AudioSource attackAudioSource;
 
     private void Awake()
     {
-        // Obtener referencias a los componentes necesarios
+        // Componentes necesarios
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-
-        // Buscar el ZombieSpawner
         spawner = Object.FindFirstObjectByType<ZombieSpawner>();
+
+        // Configurar AudioSources
+        loopAudioSource = gameObject.AddComponent<AudioSource>();
+        attackAudioSource = gameObject.AddComponent<AudioSource>();
+
+        // Configuración del AudioSource de bucle
+        loopAudioSource.loop = false;
+        loopAudioSource.playOnAwake = false;
+
+        // Configuración del AudioSource de ataque
+        attackAudioSource.clip = attackSound;
+        attackAudioSource.loop = false;
+        attackAudioSource.playOnAwake = false;
+
+        // Habilitar sonido espacial
+        ConfigureSpatialAudio(loopAudioSource);
+        ConfigureSpatialAudio(attackAudioSource);
+    }
+
+    private void ConfigureSpatialAudio(AudioSource audioSource)
+    {
+        audioSource.spatialBlend = 1f; // 100% espacial
+        audioSource.minDistance = 2f; // Volumen máximo a esta distancia
+        audioSource.maxDistance = 15f; // Volumen mínimo más allá de esta distancia
+        audioSource.rolloffMode = AudioRolloffMode.Linear; // Atenuación lineal
     }
 
     private void Start()
     {
         health = maxHealth;
 
-        // Buscar el objeto con la etiqueta "Player" y obtener su Transform
+        // Buscar al jugador
         player = GameObject.Find("FirstPersonController")?.transform;
 
         if (player != null)
         {
-            target = player; // Asignar el jugador como objetivo
+            target = player;
             playerScript = player.GetComponent<Player>();
         }
         else
         {
             Debug.LogError("Player not found in the scene.");
         }
+
+        // Iniciar reproducción de sonido en intervalos aleatorios
+        StartCoroutine(PlayRandomLoopSound());
     }
 
     private void Update()
@@ -95,8 +125,8 @@ public class Zombie : MonoBehaviour
     {
         agent.speed = 0;
         animator.SetBool("die", true);
-        animator.SetBool(animatorAttackVariable, false); // Asegurarse de que ataque esté en falso
-        capsuleCollider.enabled = false; // Apagar el collider
+        animator.SetBool(animatorAttackVariable, false);
+        capsuleCollider.enabled = false;
 
         if (playerScript != null)
         {
@@ -119,7 +149,7 @@ public class Zombie : MonoBehaviour
         agent.speed = originalSpeed;
         animator.SetBool("die", false);
         health = maxHealth;
-        capsuleCollider.enabled = true; // Volver a activar el collider
+        capsuleCollider.enabled = true;
     }
 
     private void HandlePlayerDamage()
@@ -134,7 +164,7 @@ public class Zombie : MonoBehaviour
                 {
                     playerInRange = true;
                     attackTimer = attackDelay;
-                    animator.SetBool(animatorAttackVariable, true); // Activar parámetro de ataque
+                    animator.SetBool(animatorAttackVariable, true);
                 }
 
                 if (attackTimer > 0)
@@ -144,7 +174,8 @@ public class Zombie : MonoBehaviour
 
                 if (attackTimer <= 0)
                 {
-                    player.GetComponent<Player>().TakeDamage(damageAmount);
+                    playerScript.TakeDamage(damageAmount);
+                    attackAudioSource.Play(); // Reproducir sonido de ataque
                     attackTimer = attackDelay;
                 }
             }
@@ -154,7 +185,7 @@ public class Zombie : MonoBehaviour
                 {
                     playerInRange = false;
                     attackTimer = attackDelay;
-                    animator.SetBool(animatorAttackVariable, false); // Desactivar parámetro de ataque
+                    animator.SetBool(animatorAttackVariable, false);
                 }
             }
         }
@@ -188,12 +219,33 @@ public class Zombie : MonoBehaviour
     {
         return animator.GetBool("die") || health <= 0;
     }
+
+    private IEnumerator PlayRandomLoopSound()
+    {
+        while (true)
+        {
+            float randomDelay = Random.Range(minLoopInterval, maxLoopInterval);
+            yield return new WaitForSeconds(randomDelay);
+
+            if (loopSounds.Length > 0)
+            {
+                // Seleccionar un sonido aleatorio
+                int randomIndex = Random.Range(0, loopSounds.Length);
+                loopAudioSource.clip = loopSounds[randomIndex];
+                loopAudioSource.Play();
+
+                // Esperar hasta que el sonido termine
+                yield return new WaitForSeconds(loopAudioSource.clip.length);
+            }
+        }
+    }
+
     public IEnumerator HandleSpawn()
     {
-        agent.speed = 0; // Detener al zombi
-        animator.SetBool("spawn", true); // Activar el parámetro spawn
-        yield return new WaitForSeconds(1.4f); // Esperar 1.4 segundos
-        animator.SetBool("spawn", false); // Desactivar el parámetro spawn
-        agent.speed = originalSpeed; // Restaurar la velocidad original
+        agent.speed = 0;
+        animator.SetBool("spawn", true);
+        yield return new WaitForSeconds(1.4f);
+        animator.SetBool("spawn", false);
+        agent.speed = originalSpeed;
     }
 }
