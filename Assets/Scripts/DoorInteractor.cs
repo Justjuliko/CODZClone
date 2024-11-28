@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;  // Necesario para el Input System
 
 public class DoorInteractor : MonoBehaviour
@@ -19,6 +20,8 @@ public class DoorInteractor : MonoBehaviour
     private InputAction interactAction;
 
     Player player;
+
+    [SerializeField] UnityEvent spawnEvent;
 
     private void Start()
     {
@@ -89,6 +92,9 @@ public class DoorInteractor : MonoBehaviour
             {
                 // Descontar los puntos por el costo
                 player.RemovePoints(pointCost);
+
+                // Evento que enciende los spawns
+                spawnEvent.Invoke();
 
                 // Remover puerta
                 gameObject.SetActive(false);
