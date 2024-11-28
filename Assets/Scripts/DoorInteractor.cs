@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;  // Necesario para el Input System
@@ -5,7 +6,6 @@ using UnityEngine.InputSystem;  // Necesario para el Input System
 public class DoorInteractor : MonoBehaviour
 {
     [Header("=== Settings ===")]
-
     [Tooltip("The TMP_Text component to display interaction messages.")]
     public TMPro.TMP_Text interactionText;  // Text component for displaying interaction messages
     public string interactionMessage;
@@ -23,9 +23,18 @@ public class DoorInteractor : MonoBehaviour
 
     [SerializeField] UnityEvent spawnEvent;
 
+    [Header("=== Purchase Sound Settings ===")]
+    [SerializeField] private AudioClip purchaseSound; // Clip de sonido para la compra
+    private AudioSource purchaseAudioSource; // AudioSource dedicado al sonido de compra
+
     private void Start()
     {
         player = GameObject.Find("FirstPersonController").GetComponent<Player>();
+
+        // Configurar el AudioSource para el sonido de compra
+        purchaseAudioSource = gameObject.AddComponent<AudioSource>();
+        purchaseAudioSource.clip = purchaseSound;
+        purchaseAudioSource.playOnAwake = false;
     }
 
     private void OnEnable()
@@ -93,14 +102,23 @@ public class DoorInteractor : MonoBehaviour
                 // Descontar los puntos por el costo
                 player.RemovePoints(pointCost);
 
+                // Reproducir el sonido de compra
+                PlayPurchaseSound();
+
                 // Evento que enciende los spawns
                 spawnEvent.Invoke();
 
-                // Remover puerta
-                gameObject.SetActive(false);
+                // Desactivar BoxCollider mientras suena el sonido
+                DisableCollidersTemporarily();
 
-                // Quitar mensaje
-                interactionText.text = "";
+                // Limpiar el mensaje de interacción antes de desactivar el objeto
+                if (interactionText != null)
+                {
+                    interactionText.text = "";  // Limpiar el mensaje
+                }
+
+                // Desactivar el objeto después de que el sonido termine
+                StartCoroutine(DeactivateAfterSound());
             }
             else
             {
@@ -108,5 +126,41 @@ public class DoorInteractor : MonoBehaviour
                 Debug.Log("No tienes suficientes puntos para realizar la acción.");
             }
         }
+    }
+
+    private void PlayPurchaseSound()
+    {
+        if (purchaseSound != null && purchaseAudioSource != null)
+        {
+            purchaseAudioSource.volume = 1f;  // Asegúrate de que el volumen esté al máximo
+            purchaseAudioSource.spatialBlend = 0f;  // Esto asegurará que el sonido sea 2D, no 3D
+            purchaseAudioSource.Play();
+        }
+    }
+
+    private void DisableCollidersTemporarily()
+    {
+        // Desactivar ambos BoxColliders temporalmente
+        Collider[] colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
+        {
+            collider.enabled = false;
+        }
+    }
+
+    private IEnumerator DeactivateAfterSound()
+    {
+        // Espera a que el sonido termine
+        yield return new WaitForSeconds(purchaseAudioSource.clip.length);
+
+        // Reactivar los BoxColliders después del sonido
+        Collider[] colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
+        {
+            collider.enabled = true;
+        }
+
+        // Desactivar el objeto
+        gameObject.SetActive(false);
     }
 }

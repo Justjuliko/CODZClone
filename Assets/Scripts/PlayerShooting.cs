@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -66,6 +67,9 @@ public class PlayerShooting : MonoBehaviour
     [Header("=== RELOADING SOUND SETTINGS ===")]
     public AudioClip reloadSound; // Clip de sonido para la recarga
     private AudioSource reloadAudioSource; // AudioSource dedicado al sonido de recarga
+
+    [Header("=== LIGHT SETTINGS ===")]
+    public List<GameObject> muzzleflashLights;
 
 
     private void Awake()
@@ -194,10 +198,28 @@ public class PlayerShooting : MonoBehaviour
 
         ApplyRecoil();
 
+        if (muzzleflashLights != null && muzzleflashLights.Count > 0)
+        {
+            StartCoroutine(turnOnLights());
+        }
+
         currentMagazineAmmo--;
         UpdateAmmoUI();
     }
 
+    private IEnumerator turnOnLights()
+    {
+        foreach (var light in muzzleflashLights)
+        {
+            light.SetActive(true);
+        }
+        yield return new WaitForSeconds(0.15f);
+
+        foreach (var light in muzzleflashLights)
+        {
+            light.SetActive(false);
+        }
+    }
 
     private void StartAiming()
     {

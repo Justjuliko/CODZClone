@@ -185,6 +185,7 @@ public class WeaponInventory : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Activate a specific weapon by ID, ensuring no conflicts.
     /// </summary>

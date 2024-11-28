@@ -123,5 +123,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponIndex: 1
   interactionText: {fileID: 0}
-  interactionMessage: AK
+  defaultMessage: 
   pointCost: 1000
+  purchaseSound: {fileID: 8300000, guid: d57c16070246612479ceee78ec6ccfae, type: 3}

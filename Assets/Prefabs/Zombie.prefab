@@ -1467,7 +1467,7 @@ MonoBehaviour:
   maxHealth: 100
   health: 100
   originalSpeed: 1
-  damageAmount: 10
+  damageAmount: 25
   damageRange: 2
   attackDelay: 0.5
   animatorSpeedVariable: speed

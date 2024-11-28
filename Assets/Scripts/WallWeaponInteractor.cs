@@ -23,11 +23,21 @@ public class WallWeaponInteractor : MonoBehaviour
     Player player;
     WeaponInventory weaponInventory;
 
+    [Header("=== Purchase Sound Settings ===")]
+    public AudioClip purchaseSound; // Clip de sonido para la compra
+    private AudioSource purchaseAudioSource; // AudioSource dedicado al sonido de compra
+
     private void Start()
     {
         player = GameObject.Find("FirstPersonController").GetComponent<Player>();
         weaponInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponInventory>();
+
+        // Configurar el AudioSource para el sonido de compra
+        purchaseAudioSource = gameObject.AddComponent<AudioSource>();
+        purchaseAudioSource.clip = purchaseSound;
+        purchaseAudioSource.playOnAwake = false;
     }
+
     private void OnEnable()
     {
         // Obtener el action map Player desde el Input System y asignar la acción Interact
@@ -48,23 +58,18 @@ public class WallWeaponInteractor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Verificar si el objeto que entra al trigger tiene el tag "Player"
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = true;
 
-            // Actualizar el mensaje de interacción dependiendo de la situación
             if (interactionText != null)
             {
                 if (weaponInventory != null && player != null)
                 {
-                    // Obtener el ID del arma equipada
                     int currentID = weaponInventory.GetCurrentWeaponID();
 
-                    // Verificar si el ID del arma equipada coincide con el 'weaponIndex'
                     if (currentID == weaponIndex)
                     {
-                        // Si el jugador tiene el arma, mostrar el mensaje de compra de munición
                         int refillCost = pointCost / 2;
                         if (player.currentPoints >= refillCost)
                         {
@@ -77,7 +82,6 @@ public class WallWeaponInteractor : MonoBehaviour
                     }
                     else
                     {
-                        // Si el jugador no tiene el arma, mostrar el mensaje de compra del arma
                         if (player.currentPoints >= pointCost)
                         {
                             interactionText.text = "Comprar arma: " + pointCost + " puntos";
@@ -94,12 +98,10 @@ public class WallWeaponInteractor : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // Verificar si el objeto que salió del trigger tiene el tag "Player"
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = false;
 
-            // Solo cambiar el mensaje si ya no hay interacción posible
             if (interactionText != null)
             {
                 interactionText.text = defaultMessage;  // Restaurar el mensaje por defecto
@@ -107,41 +109,32 @@ public class WallWeaponInteractor : MonoBehaviour
         }
     }
 
-    // Método que se ejecuta cuando la acción de interactuar es realizada
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        // Verificar si el jugador está en rango y la acción fue realizada
         if (isPlayerInRange)
         {
-            // Obtener el script "Player" para verificar los puntos
             if (player == null)
             {
                 Debug.LogError("No se encontró el script Player.");
-                return;  // Si no se encuentra el script del jugador, salimos de la función
+                return;
             }
 
-            // Obtener el script "WeaponInventory" del objeto con tag "Player"
             if (weaponInventory == null)
             {
                 Debug.Log("No se encontró el inventory");
-                return;  // Si no se encuentra el inventario, salimos de la función
+                return;
             }
 
-            // Obtener el ID del arma equipada
             int currentID = weaponInventory.GetCurrentWeaponID();
 
-            // Verificar si el ID del arma equipada coincide con el 'weaponIndex'
             if (currentID == weaponIndex)
             {
-                // El jugador ya tiene el arma, ofrecer recargar munición a la mitad del precio original
                 int refillCost = pointCost / 2;
 
                 if (player.currentPoints >= refillCost)
                 {
-                    // Descontar los puntos para la recarga de munición
                     player.RemovePoints(refillCost);
 
-                    // Llamar a la función de recarga de munición
                     PlayerShooting playerShooting = GameObject.Find("Weapons").GetComponent<PlayerShooting>();
                     if (playerShooting != null)
                     {
@@ -153,29 +146,25 @@ public class WallWeaponInteractor : MonoBehaviour
                         return;
                     }
 
-                    // Cambiar el mensaje de interacción después de comprar
+                    PlayPurchaseSound(); // Reproducir el sonido de compra
                     Debug.Log("Munición recargada por la mitad del precio.");
                 }
                 else
                 {
-                    // Si no tiene suficientes puntos para recargar munición
                     Debug.Log("No tienes suficientes puntos para recargar munición.");
                 }
             }
             else
             {
-                // El jugador no tiene el arma, permitir la compra del arma
                 if (player.currentPoints >= pointCost)
                 {
-                    // Descontar los puntos por el costo
                     player.RemovePoints(pointCost);
-
-                    // Llamar a la función "OverwriteCurrentWeapon" en el script "WeaponInventory" con el índice configurado
                     weaponInventory.OverwriteCurrentWeapon(weaponIndex);
-                    PlayerShooting playerShooting = GameObject.Find("Weapons").GetComponent<PlayerShooting>();
-                    playerShooting.ApplyRotationShake();
 
-                    // Cambiar el mensaje de interacción después de comprar
+                    PlayerShooting playerShooting = GameObject.Find("Weapons").GetComponent<PlayerShooting>();
+
+                    PlayPurchaseSound(); // Reproducir el sonido de compra
+
                     if (interactionText != null)
                     {
                         interactionText.text = "Compraste el arma por " + pointCost + " puntos";
@@ -185,10 +174,17 @@ public class WallWeaponInteractor : MonoBehaviour
                 }
                 else
                 {
-                    // Si no tiene suficientes puntos para comprar el arma
                     Debug.Log("No tienes suficientes puntos para comprar el arma.");
                 }
             }
+        }
+    }
+
+    private void PlayPurchaseSound()
+    {
+        if (purchaseSound != null && purchaseAudioSource != null)
+        {
+            purchaseAudioSource.Play();
         }
     }
 }

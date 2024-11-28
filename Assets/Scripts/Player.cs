@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro; // Necesario para TextMeshPro
+using UnityEngine.SceneManagement;
+
 #if UNITY_EDITOR
 using UnityEditor; // Necesario para CustomPropertyDrawer
 #endif
@@ -69,8 +71,9 @@ public class Player : MonoBehaviour
         currentHealth -= damage;
         timeSinceLastDamage = 0f; // Reset timer for health regen when damage is taken
 
-        if (currentHealth < 0f)
+        if (currentHealth <= 0f)
         {
+            SceneManager.LoadScene("DeathMenu");
             currentHealth = 0f; // Prevent health from going below zero
         }
 
