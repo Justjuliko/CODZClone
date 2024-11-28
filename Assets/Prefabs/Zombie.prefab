@@ -1476,8 +1476,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 980fba1911e696349984fb0924a7c19a, type: 3}
   - {fileID: 8300000, guid: 3f904892d50b1994f90dd1e5c1509bec, type: 3}
   - {fileID: 8300000, guid: d3919d06b080e9147ad3e23a52fc4c7f, type: 3}
-  minLoopInterval: 5
-  maxLoopInterval: 30
+  minLoopInterval: 2
+  maxLoopInterval: 15
   attackSound: {fileID: 8300000, guid: 05a426cfb7c99d04d9e00125f0afd555, type: 3}
 --- !u!1 &6906493944559020957
 GameObject:

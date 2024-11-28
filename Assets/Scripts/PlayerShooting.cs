@@ -56,6 +56,18 @@ public class PlayerShooting : MonoBehaviour
     [Header("=== AIM RETICLE ===")]
     public GameObject aimReticle; // Objeto que actúa como retícula
 
+    [Header("=== SHOOTING SOUND SETTINGS ===")]
+    public AudioClip shootingSound; // Clip de sonido del disparo
+    public int audioSourcePoolSize = 5; // Tamaño de la pool de AudioSources
+
+    private AudioSource[] audioSources; // Pool de AudioSources
+    private int currentAudioSourceIndex = 0; // Índice del AudioSource actual
+
+    [Header("=== RELOADING SOUND SETTINGS ===")]
+    public AudioClip reloadSound; // Clip de sonido para la recarga
+    private AudioSource reloadAudioSource; // AudioSource dedicado al sonido de recarga
+
+
     private void Awake()
     {
         var playerInputActions = new InputSystem_Actions();
@@ -87,6 +99,21 @@ public class PlayerShooting : MonoBehaviour
         {
             aimReticle.SetActive(true);
         }
+        // Crear un pool de AudioSources para evitar superposiciones
+        audioSources = new AudioSource[audioSourcePoolSize];
+        for (int i = 0; i < audioSourcePoolSize; i++)
+        {
+            AudioSource newAudioSource = gameObject.AddComponent<AudioSource>();
+            newAudioSource.clip = shootingSound;
+            newAudioSource.playOnAwake = false;
+            audioSources[i] = newAudioSource;
+        }
+        // Configurar el AudioSource para el sonido de recarga
+        reloadAudioSource = gameObject.AddComponent<AudioSource>();
+        reloadAudioSource.clip = reloadSound;
+        reloadAudioSource.loop = true; // Activar el bucle
+        reloadAudioSource.playOnAwake = false;
+
     }
 
     private void Update()
@@ -134,6 +161,44 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
+    private void Shoot()
+    {
+        nextShootTime = Time.time + fireRate;
+
+        // Reproducir sonido de disparo usando el siguiente AudioSource en la pool
+        if (shootingSound != null)
+        {
+            AudioSource audioSourceToUse = audioSources[currentAudioSourceIndex];
+            audioSourceToUse.Play();
+            currentAudioSourceIndex = (currentAudioSourceIndex + 1) % audioSourcePoolSize; // Ciclar al siguiente AudioSource
+        }
+
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, damageRange);
+
+        foreach (var hit in hits)
+        {
+            if (hit.collider.CompareTag("Zombie"))
+            {
+                Zombie zombie = hit.collider.GetComponent<Zombie>();
+                if (zombie != null)
+                {
+                    zombie.TakeDamage(weaponDamage);
+
+                    if (playerScript != null)
+                    {
+                        playerScript.AddPoints(10);
+                    }
+                }
+            }
+        }
+
+        ApplyRecoil();
+
+        currentMagazineAmmo--;
+        UpdateAmmoUI();
+    }
+
+
     private void StartAiming()
     {
         // Cambiar la posición de las armas para apuntar
@@ -164,35 +229,6 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    private void Shoot()
-    {
-        nextShootTime = Time.time + fireRate;
-
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, damageRange);
-
-        foreach (var hit in hits)
-        {
-            if (hit.collider.CompareTag("Zombie"))
-            {
-                Zombie zombie = hit.collider.GetComponent<Zombie>();
-                if (zombie != null)
-                {
-                    zombie.TakeDamage(weaponDamage);
-
-                    if (playerScript != null)
-                    {
-                        playerScript.AddPoints(10);
-                    }
-                }
-            }
-        }
-
-        ApplyRecoil();
-
-        currentMagazineAmmo--;
-        UpdateAmmoUI();
-    }
-
     private void ApplyRecoil()
     {
         if (!isReloading && !isRecoiling)
@@ -215,7 +251,6 @@ public class PlayerShooting : MonoBehaviour
 
         isRecoiling = false;
     }
-
     public IEnumerator Reload()
     {
         if (currentMagazineAmmo == maxMagazineAmmo || currentReserveAmmo <= 0)
@@ -225,9 +260,21 @@ public class PlayerShooting : MonoBehaviour
 
         isReloading = true;
 
+        // Iniciar el sonido de recarga en bucle
+        if (reloadSound != null)
+        {
+            reloadAudioSource.Play();
+        }
+
         StartCoroutine(ReloadAnimation());
 
         yield return new WaitForSeconds(reloadTime);
+
+        // Detener el sonido de recarga
+        if (reloadAudioSource.isPlaying)
+        {
+            reloadAudioSource.Stop();
+        }
 
         int ammoNeeded = maxMagazineAmmo - currentMagazineAmmo;
 
@@ -245,6 +292,7 @@ public class PlayerShooting : MonoBehaviour
         UpdateAmmoUI();
         isReloading = false;
     }
+
 
     private IEnumerator ReloadAnimation()
     {

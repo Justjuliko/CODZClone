@@ -100,11 +100,11 @@ public class WeaponStatsClass : MonoBehaviour
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.2f, 0.45f);
                 newOriginalPosition = new Vector3(0.281f, -0.36f, 0.45f);
-                newDamageRange = 20;
+                newDamageRange = 30;
                 break;
 
             case 1:
-                newWeaponDamage = 15;
+                newWeaponDamage = 20;
                 newFireRate = 0.2f;
                 newMaxMagazineAmmo = 30;
                 newReserveAmmo = 150;
@@ -114,11 +114,11 @@ public class WeaponStatsClass : MonoBehaviour
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.38f, 0.33f);
                 newOriginalPosition = new Vector3(0.28f, -0.52f, 0.33f);
-                newDamageRange = 30;
+                newDamageRange = 40;
                 break;
 
             case 2:
-                newWeaponDamage = 80;
+                newWeaponDamage = 160;
                 newFireRate = 0.7f;
                 newMaxMagazineAmmo = 8;
                 newReserveAmmo = 48;
@@ -128,11 +128,11 @@ public class WeaponStatsClass : MonoBehaviour
                 newReloadAngle = new Vector3(30f, 0f, 0f);
                 newAimPosition = new Vector3(0f, -0.26f, 0.2f);
                 newOriginalPosition = new Vector3(0.276f, -0.406f, 0.203f);
-                newDamageRange = 10;
+                newDamageRange = 7;
                 break;
 
             case 3:
-                newWeaponDamage = 160;
+                newWeaponDamage = 200;
                 newFireRate = 1f;
                 newMaxMagazineAmmo = 5;
                 newReserveAmmo = 40;

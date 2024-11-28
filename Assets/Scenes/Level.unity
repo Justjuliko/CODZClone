@@ -4717,6 +4717,9 @@ MonoBehaviour:
   originalPosition: {x: 0.281, y: -0.36, z: 0.45}
   damageRange: 20
   aimReticle: {fileID: 1305808984}
+  shootingSound: {fileID: 8300000, guid: 08a40ae04cd37f04284ec78f7c30f65a, type: 3}
+  audioSourcePoolSize: 5
+  reloadSound: {fileID: 8300000, guid: 19f4c8a54f05da749a6c008204ef1146, type: 3}
 --- !u!114 &891391697
 MonoBehaviour:
   m_ObjectHideFlags: 0
