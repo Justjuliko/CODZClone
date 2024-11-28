@@ -73,22 +73,22 @@ public class WallWeaponInteractor : MonoBehaviour
                         int refillCost = pointCost / 2;
                         if (player.currentPoints >= refillCost)
                         {
-                            interactionText.text = "Comprar munición: " + refillCost + " puntos";
+                            interactionText.text = "Hold F to buy ammo [cost: " + refillCost + "]";
                         }
                         else
                         {
-                            interactionText.text = "No tienes suficientes puntos para munición.";
+                            interactionText.text = "Hold F to buy ammo [cost: " + refillCost + "]";
                         }
                     }
                     else
                     {
                         if (player.currentPoints >= pointCost)
                         {
-                            interactionText.text = "Comprar arma: " + pointCost + " puntos";
+                            interactionText.text = "Hold F to buy weapon [cost: " + pointCost + "]";
                         }
                         else
                         {
-                            interactionText.text = "No tienes suficientes puntos para el arma.";
+                            interactionText.text = "Hold F to buy weapon [cost: " + pointCost + "]";
                         }
                     }
                 }
@@ -167,7 +167,7 @@ public class WallWeaponInteractor : MonoBehaviour
 
                     if (interactionText != null)
                     {
-                        interactionText.text = "Compraste el arma por " + pointCost + " puntos";
+                        interactionText.text = "";
                     }
 
                     Debug.Log("Arma comprada.");
