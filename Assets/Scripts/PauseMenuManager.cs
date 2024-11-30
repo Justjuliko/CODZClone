@@ -44,15 +44,11 @@ public class PauseMenuManager : MonoBehaviour
     {
         Time.timeScale = 0f; // Pausar el tiempo
         pauseMenu.SetActive(true); // Mostrar el menú de pausa
-        Cursor.lockState = CursorLockMode.None; // Desbloquear el cursor
-        Cursor.visible = true; // Hacer visible el cursor
     }
 
     private void ResumeGame()
     {
         Time.timeScale = 1f; // Reanudar el tiempo
         pauseMenu.SetActive(false); // Ocultar el menú de pausa
-        Cursor.lockState = CursorLockMode.Locked; // Bloquear el cursor
-        Cursor.visible = false; // Ocultar el cursor
     }
 }
