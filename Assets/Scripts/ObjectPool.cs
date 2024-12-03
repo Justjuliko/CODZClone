@@ -3,31 +3,31 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    public GameObject prefab; // Prefab que será instanciado en el pool
-    public int poolSize = 10; // Tamaño inicial del pool
+    public GameObject prefab; // Prefab that will be instantiated in the pool
+    public int poolSize = 10; // Initial size of the pool
 
     private Queue<GameObject> pool;
 
     private void Awake()
     {
-        // Inicializar el pool
+        // Initialize the pool
         pool = new Queue<GameObject>();
 
         for (int i = 0; i < poolSize; i++)
         {
-            CreateNewObject();
+            CreateNewObject(); // Create objects for the pool
         }
     }
 
-    // Crear un nuevo objeto y añadirlo al pool
+    // Create a new object and add it to the pool
     private void CreateNewObject()
     {
-        GameObject obj = Instantiate(prefab, transform); // Establecer este GameObject como padre
+        GameObject obj = Instantiate(prefab, transform); // Set this GameObject as the parent
         obj.SetActive(false);
         pool.Enqueue(obj);
     }
 
-    // Obtener un objeto del pool
+    // Get an object from the pool
     public GameObject GetObject()
     {
         if (pool.Count > 0)
@@ -38,17 +38,17 @@ public class ObjectPool : MonoBehaviour
         }
         else
         {
-            // Si el pool está vacío, instanciar un nuevo objeto
-            GameObject obj = Instantiate(prefab, transform); // Establecer este GameObject como padre
+            // If the pool is empty, instantiate a new object
+            GameObject obj = Instantiate(prefab, transform); // Set this GameObject as the parent
             return obj;
         }
     }
 
-    // Devolver un objeto al pool
+    // Return an object to the pool
     public void ReturnObject(GameObject obj)
     {
         obj.SetActive(false);
-        obj.transform.SetParent(transform); // Asegurar que el objeto vuelve al mismo padre
+        obj.transform.SetParent(transform); // Ensure the object returns to the same parent
         pool.Enqueue(obj);
     }
 }

@@ -4,31 +4,31 @@ using UnityEngine.InputSystem;
 public class PauseMenuManager : MonoBehaviour
 {
     [Header("Pause Menu Settings")]
-    public GameObject pauseMenu; // Referencia al menú de pausa
-    private bool isPaused = false; // Estado del juego (pausado o no)
+    public GameObject pauseMenu; // Reference to the pause menu
+    private bool isPaused = false; // Game state (paused or not)
 
-    private InputAction pauseAction; // Acción de pausa del Input System
+    private InputAction pauseAction; // Pause action from the Input System
 
     private void Awake()
     {
-        var playerInputActions = new InputSystem_Actions(); // Inicializar las acciones
-        pauseAction = playerInputActions.Player.Pause; // Asignar la acción de pausa
-        pauseAction.Enable(); // Activar la acción
+        var playerInputActions = new InputSystem_Actions(); // Initialize the actions
+        pauseAction = playerInputActions.Player.Pause; // Assign the pause action
+        pauseAction.Enable(); // Enable the action
     }
 
     private void OnEnable()
     {
-        pauseAction.performed += TogglePause; // Vincular la acción al método
+        pauseAction.performed += TogglePause; // Link the action to the method
     }
 
     private void OnDisable()
     {
-        pauseAction.performed -= TogglePause; // Desvincular la acción
+        pauseAction.performed -= TogglePause; // Unlink the action
     }
 
     private void TogglePause(InputAction.CallbackContext context)
     {
-        isPaused = !isPaused; // Alternar el estado de pausa
+        isPaused = !isPaused; // Toggle the pause state
 
         if (isPaused)
         {
@@ -42,13 +42,13 @@ public class PauseMenuManager : MonoBehaviour
 
     private void PauseGame()
     {
-        Time.timeScale = 0f; // Pausar el tiempo
-        pauseMenu.SetActive(true); // Mostrar el menú de pausa
+        Time.timeScale = 0f; // Pause time
+        pauseMenu.SetActive(true); // Show the pause menu
     }
 
     private void ResumeGame()
     {
-        Time.timeScale = 1f; // Reanudar el tiempo
-        pauseMenu.SetActive(false); // Ocultar el menú de pausa
+        Time.timeScale = 1f; // Resume time
+        pauseMenu.SetActive(false); // Hide the pause menu
     }
 }

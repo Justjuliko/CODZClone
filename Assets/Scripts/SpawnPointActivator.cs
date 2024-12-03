@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class SpawnPointActivator : MonoBehaviour
 {
-    // Método llamado cuando otro objeto entra en el trigger
+    // Method called when another object enters the trigger
     private void OnTriggerEnter(Collider other)
     {
-        // Verificamos si el objeto que entra tiene el tag "PlayerPresence"
+        // Check if the object that entered has the "PlayerPresence" tag
         if (other.CompareTag("PlayerPresence"))
         {
-            // Accedemos al primer hijo del objeto que entra en el trigger
+            // Access the first child of the object that entered the trigger
             Transform firstChild = other.transform.GetChild(0);
 
-            // Activamos el primer hijo si existe
+            // Activate the first child if it exists
             if (firstChild != null)
             {
                 firstChild.gameObject.SetActive(true);
@@ -19,16 +19,16 @@ public class SpawnPointActivator : MonoBehaviour
         }
     }
 
-    // Método llamado cuando otro objeto sale del trigger
+    // Method called when another object exits the trigger
     private void OnTriggerExit(Collider other)
     {
-        // Verificamos si el objeto que sale tiene el tag "PlayerPresence"
+        // Check if the object that exited has the "PlayerPresence" tag
         if (other.CompareTag("PlayerPresence"))
         {
-            // Accedemos al primer hijo del objeto que salió del trigger
+            // Access the first child of the object that exited the trigger
             Transform firstChild = other.transform.GetChild(0);
 
-            // Desactivamos el primer hijo si existe
+            // Deactivate the first child if it exists
             if (firstChild != null)
             {
                 firstChild.gameObject.SetActive(false);

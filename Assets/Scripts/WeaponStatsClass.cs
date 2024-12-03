@@ -2,48 +2,49 @@ using UnityEngine;
 
 public class WeaponStatsClass : MonoBehaviour
 {
-    int currentWeaponID = -1; // -1 significa que no hay arma
+    int currentWeaponID = -1; // -1 means no weapon is selected
 
-    // Variables de munición
-    private int[] storedAmmo; // Para almacenar las balas actuales de cada arma
-    private int[] storedReserveAmmo; // Para almacenar las reservas de cada arma
+    // Ammo variables
+    private int[] storedAmmo; // Stores the current ammo for each weapon
+    private int[] storedReserveAmmo; // Stores the reserve ammo for each weapon
 
-    // Variables de estadísticas de las armas
-    public float newWeaponDamage;
-    public float newFireRate;
-    public int newMaxMagazineAmmo;
-    public int newReserveAmmo;
-    public float newReloadTime;
-    public bool newAuto;
-    public float newRecoilAngle;
-    public Vector3 newReloadAngle;
-    public Vector3 newAimPosition;
-    public int newDamageRange;
+    // Weapon stats variables
+    public float newWeaponDamage; // Damage dealt by the weapon
+    public float newFireRate; // Rate of fire for the weapon
+    public int newMaxMagazineAmmo; // Maximum ammo capacity in the magazine
+    public int newReserveAmmo; // Reserve ammo for the weapon
+    public float newReloadTime; // Time it takes to reload the weapon
+    public bool newAuto; // Whether the weapon is automatic or not
+    public float newRecoilAngle; // Recoil angle when firing the weapon
+    public Vector3 newReloadAngle; // Reload angle for animation
+    public Vector3 newAimPosition; // Position of the weapon when aiming
+    public int newDamageRange; // Range for the weapon's damage
 
-    private PlayerShooting playerShootingScript;
-    private WeaponInventory inventory;
-    private Vector3 newOriginalPosition;
+    private PlayerShooting playerShootingScript; // Reference to the player shooting script
+    private WeaponInventory inventory; // Reference to the weapon inventory
+    private Vector3 newOriginalPosition; // The weapon's original position
 
     private void Start()
     {
-        // Obtener las referencias a otros componentes
+        // Get references to other components
         playerShootingScript = GetComponent<PlayerShooting>();
         inventory = GetComponent<WeaponInventory>();
 
-        // Inicializar las variables de munición si no están ya inicializadas
+        // Initialize ammo arrays if they haven't been initialized
         if (storedAmmo == null || storedAmmo.Length == 0)
         {
-            storedAmmo = new int[4];  // Cambia el tamaño según la cantidad de armas que tengas
-            storedReserveAmmo = new int[4];  // Cambia el tamaño según la cantidad de armas que tengas
+            storedAmmo = new int[4];  // Adjust the size depending on how many weapons you have
+            storedReserveAmmo = new int[4];  // Adjust the size depending on how many weapons you have
 
-            // Inicializar la munición para cada arma (si no se hace de otro modo)
+            // Initialize ammo for each weapon (if not set in another way)
             for (int i = 0; i < storedAmmo.Length; i++)
             {
-                storedAmmo[i] = 0;  // Inicia la munición actual en 0
-                storedReserveAmmo[i] = 0;  // Inicia las reservas en 0
+                storedAmmo[i] = 0;  // Start with 0 ammo in the magazine
+                storedReserveAmmo[i] = 0;  // Start with 0 reserve ammo
             }
         }
 
+        // Check if inventory or shooting script is missing
         if (inventory == null || playerShootingScript == null)
         {
             Debug.LogError("WeaponStatsClass: Missing WeaponInventory or PlayerShooting component.");
@@ -52,20 +53,20 @@ public class WeaponStatsClass : MonoBehaviour
 
     public void currentIdUpdate()
     {
-        // Asegúrate de que las referencias no sean null antes de usarlas
+        // Ensure references are not null before using them
         if (inventory != null && playerShootingScript != null)
         {
-            // Asegurarse de que currentWeaponID se obtiene correctamente
+            // Get the current weapon ID
             currentWeaponID = inventory.GetCurrentWeaponID();
 
-            if (currentWeaponID >= 0) // Asegurarse de que el ID es válido
+            if (currentWeaponID >= 0) // Ensure the weapon ID is valid
             {
-                changeValues(); // Actualizamos los valores del arma
+                changeValues(); // Update the weapon stats
 
-                // Comprobar que la munición y las reservas están configuradas correctamente
+                // Check that ammo and reserves are correctly configured
                 if (storedReserveAmmo != null && currentWeaponID < storedReserveAmmo.Length)
                 {
-                    // Actualizar la configuración del arma en el script de PlayerShooting
+                    // Update the weapon settings in the PlayerShooting script
                     playerShootingScript.UpdateWeaponSettings(newWeaponDamage, newFireRate, newMaxMagazineAmmo, newReserveAmmo, newReloadTime, newAuto, newRecoilAngle, newReloadAngle, newAimPosition, newDamageRange, newOriginalPosition);
                 }
                 else
@@ -86,7 +87,7 @@ public class WeaponStatsClass : MonoBehaviour
 
     public void changeValues()
     {
-        // Se actualizan los valores según el ID del arma
+        // Update weapon stats based on the weapon ID
         switch (currentWeaponID)
         {
             case 0:

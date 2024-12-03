@@ -203,7 +203,7 @@ public class ZombieSpawner : MonoBehaviour
         // Set the current kills required to advance for debugging
         killsToAdvanceCurrent = killsToAdvanceThisRoundInternal;
 
-        // Aumentar atributos de los zombis
+        // Increase zombie stats
         IncreaseZombieStats();
 
         // Adjust the spawn interval, but stop decreasing after 0.7 seconds
@@ -224,6 +224,7 @@ public class ZombieSpawner : MonoBehaviour
             roundText.text = $"{currentRound}"; // Show only the round number
         }
     }
+
     private void IncreaseZombieStats()
     {
         foreach (var zombie in zombiePool)
@@ -231,13 +232,13 @@ public class ZombieSpawner : MonoBehaviour
             Zombie zombieScript = zombie.GetComponent<Zombie>();
             if (zombieScript != null)
             {
-                // Incrementar la vida máxima dentro del límite permitido
+                // Increase max health within the allowed limit
                 zombieScript.maxHealth = Mathf.Min(maxZombieHealth, zombieScript.maxHealth + healthIncreasePerRound);
-                zombieScript.health = zombieScript.maxHealth; // Restaurar la vida al máximo actualizado
+                zombieScript.health = zombieScript.maxHealth; // Restore health to the updated max
 
-                // Incrementar la velocidad original dentro del límite permitido
+                // Increase original speed within the allowed limit
                 zombieScript.originalSpeed = Mathf.Min(maxZombieSpeed, zombieScript.originalSpeed + speedIncreasePerRound);
-                zombieScript.GetComponent<NavMeshAgent>().speed = zombieScript.originalSpeed; // Actualizar velocidad actual
+                zombieScript.GetComponent<NavMeshAgent>().speed = zombieScript.originalSpeed; // Update current speed
             }
         }
     }
